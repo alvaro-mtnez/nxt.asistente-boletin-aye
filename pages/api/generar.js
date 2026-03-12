@@ -53,10 +53,17 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Anthropic error:", JSON.stringify(data));
+      return res.status(500).json({ error: data?.error?.message || "Error de Anthropic", detail: data });
+    }
+
     const raw = (data.content || []).map(b => b.text || "").join("");
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
     return res.status(200).json(parsed);
   } catch (e) {
+    console.error("Handler error:", e.message);
     return res.status(500).json({ error: e.message || "Error interno" });
   }
 }
