@@ -21,7 +21,7 @@ ${parsed.tracking_pixels || ""}
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>
 <td width="25%" style="padding-left:15px; vertical-align:middle;">
 <a href="https://www.autonomosyemprendedor.es/" target="_blank" style="display:block; text-decoration:none; border:0;">
-<img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090319502622678.png" alt="AyE Economía Real" style="display:block; width:100%; max-width:160px; height:auto; border:0;" /></a></td>
+<img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090320300074548.png" alt="AyE Economía Real" style="display:block; width:100%; max-width:160px; height:auto; border:0;" /></a></td>
 <td width="50%" style="text-align:center; vertical-align:middle; font-family:Arial,sans-serif; color:#FFFFFF; font-size:14px; font-weight:bold; line-height:1.2; padding:0 5px 0 30px;">El medio de los que mueven la economía</td>
 <td width="25%" style="text-align:right; vertical-align:middle; padding-right:12px; font-family:Arial,sans-serif; color:#FFFFFF; font-size:13px; line-height:1.2;">${parsed.fecha || ""}</td>
 </tr></table></td></tr></table>
