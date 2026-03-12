@@ -114,9 +114,7 @@ export default function App() {
 
       {/* Header */}
       <div style={{ maxWidth: 680, margin: "0 auto 28px auto", textAlign: "center" }}>
-        <div style={{ background: accent, borderRadius: 10, padding: "14px 24px", display: "inline-block", transition: "background .3s" }}>
-          <img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090319502622678.png" alt="AyE" style={{ height: 36, display: "block" }} />
-        </div>
+        <img src="http://autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090320300074548.png" alt="AyE" style={{ height: 52, display: "block", margin: "0 auto" }} />
         <div style={{ marginTop: 10, fontSize: 21, fontWeight: "bold", color: "#1D1D1B" }}>Maquetador de Boletines</div>
         <div style={{ marginTop: 3, fontSize: 12, color: "#999" }}>Herramienta interna · Diario AyE</div>
       </div>
@@ -125,7 +123,7 @@ export default function App() {
 
         {/* Paso 1 */}
         <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-          <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Paso 1 · Tipo de bolet\u00edn</div>
+          <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Paso 1 · Tipo de boletín</div>
           <div style={{ display: "flex", gap: 12 }}>
             {["AyE", "ATA"].map(t => {
               const c = t === "ATA" ? "#234536" : "#C22D2D";
@@ -143,15 +141,15 @@ export default function App() {
         {/* Paso 2 */}
         {tipo && (
           <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-            <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Paso 2 · HTML del bolet\u00edn fuente</div>
+            <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Paso 2 · HTML del boletín fuente</div>
             <textarea value={htmlFuente} onChange={e => setHtmlFuente(e.target.value)}
-              rows={9} placeholder="Pega aqu\u00ed el c\u00f3digo HTML completo del bolet\u00edn fuente..."
+              rows={9} placeholder="Pega aquí el código HTML completo del boletín fuente..."
               style={{ width: "100%", padding: "10px 12px", fontSize: 12, fontFamily: "monospace", borderRadius: 6, border: "1.5px solid #ddd", resize: "vertical", boxSizing: "border-box", outline: "none", background: "#FAFAFA", color: "#333" }} />
             {htmlFuente && <div style={{ marginTop: 6, fontSize: 12, color: "#999" }}>{htmlFuente.length.toLocaleString("es")} caracteres</div>}
             {error && <div style={{ marginTop: 10, padding: "10px 14px", background: "#fff0f0", borderRadius: 6, color: "#C22D2D", fontSize: 13 }}>⚠️ {error}</div>}
             <button onClick={handleGenerar} disabled={loading || !htmlFuente.trim()}
               style={{ marginTop: 14, width: "100%", padding: "14px 0", fontSize: 16, fontWeight: "bold", borderRadius: 8, border: "none", cursor: loading || !htmlFuente.trim() ? "not-allowed" : "pointer", background: loading || !htmlFuente.trim() ? "#ccc" : accent, color: "#fff", fontFamily: "Arial,sans-serif", transition: "background .3s" }}>
-              {loading ? "⏳ Generando bolet\u00edn\u2026" : `🚀 Generar bolet\u00edn ${tipo}`}
+              {loading ? "⏳ Generando boletín…" : `🚀 Generar boletín ${tipo}`}
             </button>
           </div>
         )}
@@ -160,7 +158,7 @@ export default function App() {
         {resultado && (
           <div ref={outputRef}>
             <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-              <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>\u2705 Resultado generado</div>
+              <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>✅ Resultado generado</div>
 
               {[
                 { label: "Asunto 1", val: resultado.asunto1, art: resultado.art1, key: "a1", max: 49 },
@@ -174,7 +172,7 @@ export default function App() {
                     <div style={{ flex: 1, padding: "10px 12px", background: "#F8F8F8", borderRadius: 6, fontSize: 14, fontWeight: "bold", color: "#1D1D1B", border: "1.5px solid #eee" }}>{val}</div>
                     <CopyBtn text={val} id={key} />
                   </div>
-                  <div style={{ fontSize: 11, color: "#aaa", marginTop: 4 }}>Art\u00edculo: {art}</div>
+                  <div style={{ fontSize: 11, color: "#aaa", marginTop: 4 }}>Artículo: {art}</div>
                 </div>
               ))}
 
@@ -201,7 +199,7 @@ export default function App() {
 
             <button onClick={reset}
               style={{ width: "100%", padding: "12px 0", fontSize: 14, fontWeight: "bold", borderRadius: 8, border: `2px solid ${accent}`, background: "#fff", color: accent, cursor: "pointer", fontFamily: "Arial,sans-serif" }}>
-              \u21a9 Nuevo bolet\u00edn
+              ↩ Nuevo boletín
             </button>
           </div>
         )}
