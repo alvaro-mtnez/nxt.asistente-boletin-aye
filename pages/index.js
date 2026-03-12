@@ -3,10 +3,7 @@ import { useState, useRef } from "react";
 const BANNER_ATA_BLOCK = `<!-- BANNER FINAL ATA -->
 <tr><td align="center" style="padding:10px;">
   <a target="_blank" href="https://ata.es/convenios/" style="text-decoration:none; border:0;">
-    <img alt="ATA convenios"
-         src="https://autonomosyemprendedor.opennemas.com/media/autonomosyemprendedor/images/2023/03/23/2023032311395220745.jpg"
-         width="600"
-         style="display:block; width:100%; max-width:600px; height:auto; border:0;" />
+    <img alt="ATA convenios" src="https://autonomosyemprendedor.opennemas.com/media/autonomosyemprendedor/images/2023/03/23/2023032311395220745.jpg" width="600" style="display:block; width:100%; max-width:600px; height:auto; border:0;" />
   </a>
 </td></tr>`;
 
@@ -24,8 +21,8 @@ ${parsed.tracking_pixels || ""}
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>
 <td width="25%" style="padding-left:15px; vertical-align:middle;">
 <a href="https://www.autonomosyemprendedor.es/" target="_blank" style="display:block; text-decoration:none; border:0;">
-<img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090319502622678.png" alt="AyE Econom\u00eda Real" style="display:block; width:100%; max-width:160px; height:auto; border:0;" /></a></td>
-<td width="50%" style="text-align:center; vertical-align:middle; font-family:Arial,sans-serif; color:#FFFFFF; font-size:14px; font-weight:bold; line-height:1.2; padding:0 5px 0 30px;">El medio de los que mueven la econom\u00eda</td>
+<img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090319502622678.png" alt="AyE Economía Real" style="display:block; width:100%; max-width:160px; height:auto; border:0;" /></a></td>
+<td width="50%" style="text-align:center; vertical-align:middle; font-family:Arial,sans-serif; color:#FFFFFF; font-size:14px; font-weight:bold; line-height:1.2; padding:0 5px 0 30px;">El medio de los que mueven la economía</td>
 <td width="25%" style="text-align:right; vertical-align:middle; padding-right:12px; font-family:Arial,sans-serif; color:#FFFFFF; font-size:13px; line-height:1.2;">${parsed.fecha || ""}</td>
 </tr></table></td></tr></table>
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:620px; margin:0 auto; padding:20px 0 0;">
@@ -38,14 +35,10 @@ ${parsed.tracking_pixels || ""}
 <table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0" style="width:620px; max-width:620px; margin:0 auto; background-color:#F4ECE2; font-family:Arial,Helvetica,sans-serif; border:0;">
 <tr><td style="font-size:0; line-height:0; height:18px;">&nbsp;</td></tr>
 ${parsed.contenido_html || ""}
-<tr><td align="center" style="padding:10px;">
-<a href="https://pubads.g.doubleclick.net/gampad/jump?iu=/21634166200/newsletter_impressions&sz=1x1&c=1607023636" target="_blank" style="text-decoration:none; border:0;">
-<img alt="" src="https://pubads.g.doubleclick.net/gampad/ad?iu=/21634166200/newsletter_impressions&sz=1x1&c=1607023636" style="display:block; width:1px; height:1px; border:0;" /></a>
-</td></tr>
 ${bannerAta}
 <tr><td align="center" style="padding:18px 10px 8px 10px;">
-<div style="font-weight:bold; font-size:18px; color:#AE191A; font-family:Arial,Helvetica,sans-serif;">Diario AyE | Donde se informan los que mueven la econom\u00eda</div>
-<div style="margin-top:4px; font-size:12px; color:#777777; font-family:Arial,Helvetica,sans-serif;">Actualidad econ\u00f3mica, consejos pr\u00e1cticos, entrevistas\u2026 para pymes y aut\u00f3nomos.</div>
+<div style="font-weight:bold; font-size:18px; color:#AE191A; font-family:Arial,Helvetica,sans-serif;">Diario AyE | Donde se informan los que mueven la economía</div>
+<div style="margin-top:4px; font-size:12px; color:#777777; font-family:Arial,Helvetica,sans-serif;">Actualidad económica, consejos prácticos, entrevistas\u2026 para pymes y autónomos.</div>
 </td></tr>
 </table>
 </td></tr></table>
@@ -59,29 +52,25 @@ export default function App() {
   const [error, setError] = useState("");
   const [resultado, setResultado] = useState(null);
   const [copied, setCopied] = useState({});
+  const [preview, setPreview] = useState(false);
   const outputRef = useRef(null);
 
   const accent = tipo === "ATA" ? "#234536" : "#C22D2D";
 
-  const handleTipo = t => { setTipo(t); setResultado(null); setError(""); };
+  const handleTipo = t => { setTipo(t); setResultado(null); setError(""); setPreview(false); };
 
   const handleGenerar = async () => {
-    if (!htmlFuente.trim()) { setError("Pega el HTML del bolet\u00edn fuente antes de continuar."); return; }
-    setLoading(true); setError(""); setResultado(null);
+    if (!htmlFuente.trim()) { setError("Pega el HTML del boletín fuente antes de continuar."); return; }
+    setLoading(true); setError(""); setResultado(null); setPreview(false);
     try {
       const res = await fetch("/api/generar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tipo, htmlFuente }),
       });
-      if (!res.ok) throw new Error("Error en el servidor. Int\u00e9ntalo de nuevo.");
-      const parsed = await res.json();
-      setResultado({
-        html: buildHtml(parsed, tipo),
-        asunto1: parsed.asunto1, art1: parsed.asunto1_articulo,
-        asunto2: parsed.asunto2, art2: parsed.asunto2_articulo,
-        vp: parsed.vista_previa,
-      });
+      const resData = await res.json();
+      if (!res.ok) throw new Error(resData?.error || "Error en el servidor.");
+      setResultado({ html: buildHtml(resData, tipo), asunto1: resData.asunto1, art1: resData.asunto1_articulo, asunto2: resData.asunto2, art2: resData.asunto2_articulo, vp: resData.vista_previa });
       setTimeout(() => outputRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     } catch (e) {
       setError(e.message || "Error inesperado.");
@@ -96,12 +85,12 @@ export default function App() {
     setTimeout(() => setCopied(p => ({ ...p, [key]: false })), 1800);
   };
 
-  const reset = () => { setTipo(null); setHtmlFuente(""); setResultado(null); setError(""); setCopied({}); };
+  const reset = () => { setTipo(null); setHtmlFuente(""); setResultado(null); setError(""); setCopied({}); setPreview(false); };
 
   const CopyBtn = ({ text, id, label = "Copiar" }) => (
     <button onClick={() => copy(text, id)}
-      style={{ padding: "0 14px", background: copied[id] ? "#4caf50" : accent, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: "bold", whiteSpace: "nowrap", fontFamily: "Arial,sans-serif", transition: "background .2s" }}>
-      {copied[id] ? "\u2713 Copiado" : label}
+      style={{ padding: "0 14px", background: copied[id] ? "#4caf50" : accent, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: "bold", whiteSpace: "nowrap", fontFamily: "Arial,sans-serif", transition: "background .2s", height: 42 }}>
+      {copied[id] ? "✓ Copiado" : label}
     </button>
   );
 
@@ -157,6 +146,8 @@ export default function App() {
         {/* Resultado */}
         {resultado && (
           <div ref={outputRef}>
+
+            {/* Asuntos y vista previa */}
             <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
               <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>✅ Resultado generado</div>
 
@@ -187,18 +178,41 @@ export default function App() {
               </div>
             </div>
 
+            {/* HTML final + previsualización */}
             <div style={{ background: "#fff", borderRadius: 10, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
                 <div style={{ fontSize: 13, fontWeight: "bold", color: accent, textTransform: "uppercase", letterSpacing: 1 }}>HTML Final</div>
-                <CopyBtn text={resultado.html} id="html" label="📋 Copiar HTML completo" />
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => setPreview(!preview)}
+                    style={{ padding: "0 14px", height: 42, background: preview ? "#555" : "#444", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: "bold", fontFamily: "Arial,sans-serif" }}>
+                    {preview ? "🙈 Ocultar preview" : "👁️ Vista previa"}
+                  </button>
+                  <CopyBtn text={resultado.html} id="html" label="📋 Copiar HTML" />
+                </div>
               </div>
+
+              {/* Preview iframe */}
+              {preview && (
+                <div style={{ marginBottom: 16, border: "1.5px solid #eee", borderRadius: 8, overflow: "hidden" }}>
+                  <div style={{ background: "#f0f0f0", padding: "6px 12px", fontSize: 11, color: "#888", borderBottom: "1px solid #eee" }}>
+                    Vista previa del boletín generado
+                  </div>
+                  <iframe
+                    srcDoc={resultado.html}
+                    style={{ width: "100%", height: 600, border: "none", background: "#fff" }}
+                    title="Vista previa del boletín"
+                    sandbox="allow-same-origin"
+                  />
+                </div>
+              )}
+
               <textarea readOnly value={resultado.html} rows={10}
                 style={{ width: "100%", padding: "10px 12px", fontSize: 11, fontFamily: "monospace", borderRadius: 6, border: "1.5px solid #ddd", resize: "vertical", boxSizing: "border-box", background: "#FAFAFA", color: "#555" }} />
               <div style={{ marginTop: 6, fontSize: 12, color: "#999" }}>{resultado.html.length.toLocaleString("es")} caracteres totales</div>
             </div>
 
             <button onClick={reset}
-              style={{ width: "100%", padding: "12px 0", fontSize: 14, fontWeight: "bold", borderRadius: 8, border: `2px solid ${accent}`, background: "#fff", color: accent, cursor: "pointer", fontFamily: "Arial,sans-serif" }}>
+              style={{ width: "100%", padding: "12px 0", fontSize: 14, fontWeight: "bold", borderRadius: 8, border: `2px solid ${accent}`, background: "#fff", color: accent, cursor: "pointer", fontFamily: "Arial,sans-serif", marginBottom: 24 }}>
               ↩ Nuevo boletín
             </button>
           </div>
