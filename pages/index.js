@@ -103,7 +103,7 @@ export default function App() {
 
       {/* Header */}
       <div style={{ maxWidth: 680, margin: "0 auto 28px auto", textAlign: "center" }}>
-        <img src="http://autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090320300074548.png" alt="AyE" style={{ height: 52, display: "block", margin: "0 auto" }} />
+        <img src="https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/06/28/2025062812113336013.png" alt="AyE" style={{ height: 52, display: "block", margin: "0 auto" }} />
         <div style={{ marginTop: 10, fontSize: 21, fontWeight: "bold", color: "#1D1D1B" }}>Maquetador de Boletines</div>
         <div style={{ marginTop: 3, fontSize: 12, color: "#999" }}>Herramienta interna · Diario AyE</div>
       </div>
