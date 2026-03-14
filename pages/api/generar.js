@@ -3,50 +3,58 @@ const SYSTEM_PROMPT = `Eres el Asistente de extracción de contenido de Boletine
 Tu trabajo es analizar el HTML fuente del boletín y extraer su contenido estructurado en JSON.
 NO generas HTML. Solo extraes datos.
 
-== QUÉ DEBES EXTRAER ==
+== ESTRUCTURA DE BLOQUES ==
 
-1. tracking_pixels: los 5 <img> de píxeles de seguimiento de Google Analytics, copiados literalmente.
-2. fecha: la fecha del boletín en formato "DD de mes de YYYY" (ej: "12 de marzo de 2026").
-3. bloques: array de bloques editoriales. Cada bloque tiene:
-   - hero: el artículo principal del bloque (imagen grande zoomcrop,770,430)
-     - url: URL completa del artículo (con UTMs)
-     - img: URL de la imagen (zoomcrop,770,430)
-     - titulo: título del artículo
-     - autor: nombre del autor
-   - articulos: array de artículos secundarios del bloque (2 o 3)
-     - url: URL completa (con UTMs)
-     - img: URL thumbnail
-     - titulo: título
-     - autor: nombre del autor (puede ser vacío)
-   - banner_antes: si hay un banner DFP ANTES de este bloque, extrae:
-     - url_click: URL del enlace del banner
-     - url_img: URL de la imagen del banner
-     - alt: texto alt del banner
+BLOQUE 1: siempre tiene hero + 3 artículos en grid de 3 columnas.
+BLOQUES 2 en adelante: hero + 2 artículos en grid de 2 columnas.
+ÚLTIMO BLOQUE: puede ser una de estas tres variantes:
+  - "hero+2": hero + 2 artículos (normal)
+  - "solo_hero": solo hero, sin artículos debajo
+  - "solo_2": solo 2 artículos en grid de 2 columnas, sin hero (tamaño igual que los artículos secundarios)
 
-4. asunto1: texto de máx 49 caracteres para asunto de email
-5. asunto1_articulo: título exacto del artículo en que se basa
-6. asunto2: texto de máx 49 caracteres
+Indica la variante del último bloque en el campo "ultimo_tipo".
+
+== BANNERS ==
+
+Los banners DFP son imágenes de pubads.g.doubleclick.net con sz=600x90.
+Cada banner se coloca ANTES del hero del bloque al que precede.
+Si hay más banners que bloques disponibles para colocarlos, el primer banner se coloca antes del hero del bloque 1 (encima de todo el contenido).
+NUNCA dos banners seguidos sin contenido editorial entre medias.
+El pixel de impresiones (sz=1x1) NO es un banner, ignóralo.
+
+Para cada bloque, indica en "banner_antes" el banner que va antes de ese bloque (o null si no hay).
+
+== QUÉ EXTRAER ==
+
+1. tracking_pixels: los <img> de píxeles de seguimiento, copiados literalmente.
+2. fecha: "DD de mes de YYYY"
+3. bloques: array donde cada elemento tiene:
+   - banner_antes: { url_click, url_img, alt } o null
+   - tipo: "hero+3" (solo bloque 1), "hero+2", "solo_hero", "solo_2"
+   - hero: { url, img, titulo, autor } — null si tipo es "solo_2"
+   - articulos: array de artículos secundarios — vacío si tipo es "solo_hero"
+     Cada artículo: { url, img, titulo, autor }
+4. asunto1: máx 49 caracteres
+5. asunto1_articulo: título exacto
+6. asunto2: máx 49 caracteres
 7. asunto2_articulo: título exacto
-8. vista_previa: texto de máx 150 caracteres resumen del boletín
+8. vista_previa: máx 150 caracteres
 
 == REGLAS ==
 - NO inventes datos. Extrae EXACTAMENTE lo que está en el HTML fuente.
-- Los banners DFP son los <img> de pubads.g.doubleclick.net con sz=600x90.
-- El pixel de impresiones (sz=1x1) NO es un banner, ignóralo en bloques.
-- Mantén UTMs exactamente como vengan en las URLs.
+- Mantén UTMs exactamente como vengan.
 - CRITERIOS para asuntos: prioriza IVA, cuotas, IRPF, Seguridad Social, Hacienda, sanciones, inspecciones, cambios normativos, Verifactu. Evita podcasts, entrevistas de branding, lifestyle.
 
 RESPONDE ÚNICAMENTE con JSON válido, sin backticks, sin texto extra:
 {
-  "tracking_pixels": "<img .../><img .../>...",
+  "tracking_pixels": "...",
   "fecha": "DD de mes de YYYY",
   "bloques": [
     {
       "banner_antes": null,
+      "tipo": "hero+3",
       "hero": { "url": "...", "img": "...", "titulo": "...", "autor": "..." },
-      "articulos": [
-        { "url": "...", "img": "...", "titulo": "...", "autor": "..." }
-      ]
+      "articulos": [ { "url": "...", "img": "...", "titulo": "...", "autor": "..." } ]
     }
   ],
   "asunto1": "...",
@@ -73,7 +81,7 @@ export default async function handler(req, res) {
         model: "claude-sonnet-4-20250514",
         max_tokens: 16000,
         system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: `Tipo: ${tipo}\n\nHTML fuente:\n${htmlFuente}` }],
+        messages: [{ role: "user", content: `Tipo: ${tipo}\n\nHTML fuente del boletín:\n${htmlFuente}` }],
       }),
     });
 
