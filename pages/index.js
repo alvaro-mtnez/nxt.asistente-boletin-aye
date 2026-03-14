@@ -9,6 +9,8 @@ const PIXEL_IMPRESIONES = `<tr><td align="center" style="padding:10px;"><a href=
 
 const SEPARADOR = `<tr><td style="padding:10px 0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-bottom:4px dotted #C22D2D; font-size:0; line-height:0;">&nbsp;</td></tr></table></td></tr>`;
 
+const SPACER = `<tr><td style="font-size:0; line-height:0; height:18px;">&nbsp;</td></tr>`;
+
 function renderBanner(b) {
   if (!b) return "";
   return `<tr><td align="center" style="padding:0 10px 10px 10px;"><a target="_blank" href="${b.url_click}" style="text-decoration:none; border:0;"><img alt="${b.alt || ""}" src="${b.url_img}" width="600" style="display:block; width:100%; max-width:600px; height:auto; border:0;" /></a></td></tr>`;
@@ -26,18 +28,18 @@ function renderArticulo3col(art, padding) {
   return `<td width="33.33%" valign="top" style="padding:${padding};"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td><a target="_blank" href="${art.url}" style="text-decoration:none; border:0;"><img alt="${art.titulo.replace(/"/g, '&quot;')}" src="${art.img}" width="200" style="display:block; width:100%; height:auto; border:0; border-radius:8px;" /></a></td></tr><tr><td style="padding:10px 0 0 0;"><a target="_blank" href="${art.url}" style="color:#3D3D3D; text-decoration:none; font-size:15px; font-weight:bold; line-height:1.2; display:block;">${art.titulo}</a><div style="margin-top:5px; text-transform:uppercase; color:#777777; font-size:12px;">${art.autor || ""}</div></td></tr></table></td>`;
 }
 
-function renderGrid(articulos) {
+function renderGrid3(articulos) {
+  if (!articulos || articulos.length < 3) return "";
+  const cols = renderArticulo3col(articulos[0], "0 5px 0 0")
+    + renderArticulo3col(articulos[1], "0 5px")
+    + renderArticulo3col(articulos[2], "0 0 0 5px");
+  return `<tr><td style="padding:0 10px 10px 10px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${cols}</tr></table></td></tr>`;
+}
+
+function renderGrid2(articulos) {
   if (!articulos || articulos.length === 0) return "";
-  const is3 = articulos.length === 3;
-  let cols = "";
-  if (is3) {
-    cols += renderArticulo3col(articulos[0], "0 5px 0 0");
-    cols += renderArticulo3col(articulos[1], "0 5px");
-    cols += renderArticulo3col(articulos[2], "0 0 0 5px");
-  } else {
-    cols += renderArticulo2col(articulos[0], "0 5px 0 0");
-    if (articulos[1]) cols += renderArticulo2col(articulos[1], "0 0 0 5px");
-  }
+  const cols = renderArticulo2col(articulos[0], "0 5px 0 0")
+    + (articulos[1] ? renderArticulo2col(articulos[1], "0 0 0 5px") : "");
   return `<tr><td style="padding:0 10px 10px 10px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${cols}</tr></table></td></tr>`;
 }
 
@@ -47,24 +49,31 @@ function buildHtml(data, tipo) {
 
   bloques.forEach((bloque, i) => {
     const hasBanner = !!bloque.banner_antes;
-    const prevHasBanner = i > 0 && !!bloques[i - 1]?.banner_antes;
 
-    // Separador: solo si no hay banner antes de este bloque y no es el primero
+    // Separador entre bloques: solo si no hay banner entre ellos y no es el primero
     if (i > 0 && !hasBanner) contenido += SEPARADOR;
 
-    contenido += `<tr><td style="font-size:0; line-height:0; height:18px;">&nbsp;</td></tr>`;
+    contenido += SPACER;
 
     // Banner antes del bloque
     if (hasBanner) contenido += renderBanner(bloque.banner_antes);
 
-    // Hero
-    contenido += renderHero(bloque.hero);
+    const t = bloque.tipo;
 
-    // Grid artículos
-    contenido += renderGrid(bloque.articulos);
+    if (t === "solo_2") {
+      // Solo grid de 2 artículos, sin hero
+      contenido += renderGrid2(bloque.articulos);
+    } else {
+      // Tiene hero
+      if (bloque.hero) contenido += renderHero(bloque.hero);
+      // Grid según tipo
+      if (t === "hero+3") contenido += renderGrid3(bloque.articulos);
+      else if (t === "hero+2") contenido += renderGrid2(bloque.articulos);
+      // "solo_hero": no hay grid
+    }
   });
 
-  // Banner ATA si corresponde
+  // Banner ATA
   if (tipo === "ATA") contenido += BANNER_ATA;
 
   // Pixel impresiones
