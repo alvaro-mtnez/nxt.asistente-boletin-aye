@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 const LOGO_CABECERA = "https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/06/28/2025062812113336013.png";
 const LOGO_APP = "https://www.autonomosyemprendedor.es/media/autonomosyemprendedor/images/2025/09/03/2025090320300074548.png";
